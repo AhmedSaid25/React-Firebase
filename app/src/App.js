@@ -7,6 +7,7 @@ const App = () => {
   const [imageUpload, setImageUpload] = useState(null);
   const [storage, setStorage] = useState(null);
   const [userId, setUserId] = useState("");
+  const [images, setImages] = useState([]); // State to hold images
   const [items, setItems] = useState([]);
 
 useEffect(() => {
@@ -18,12 +19,13 @@ useEffect(() => {
     messagingSenderId: "812396111600",
     appId: "1:812396111600:web:e3cbb60621d9d8d7be4435",
     measurementId: "G-CYBTVDXLNP"
-  };
-    // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const storageRef = getStorage(app); // Get storage reference
+};
 
-  setStorage(storageRef); // Update the storage state variable
+    // Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const storageRef = getStorage(app); // Get storage reference
+
+setStorage(storageRef); // Update the storage state variable
 
 if (storageRef) {
     const imagesListRef = ref(storageRef, "images/"); // Create image list reference
@@ -51,16 +53,43 @@ const uploadImage = () => {
     alert("Please enter a valid user ID");
     return;
 };
+
 const folderName = `images/${userId}` ;
 const imageRef = ref(storage, folderName + "/" + imageUpload.name);
 
-    uploadBytes(imageRef, imageUpload)
-      .then(() => {
-        alert("Image Uploaded");
-      })
-      .catch((error) => {
-        console.error("Error uploading image:", error);
-      });
+uploadBytes(imageRef, imageUpload)
+  .then(() => {
+    alert("Image Uploaded");
+  })
+  .catch((error) => {
+    console.error("Error uploading image:", error);
+  });
+};
+
+const displayImages = () => {
+  if (storage == null || userId.trim() === "") {
+    alert("Please enter a valid user ID");
+    return;
+  }
+
+  const folderName = `images/${userId}`;
+  const folderRef = ref(storage, folderName);
+
+  // List all files in the folder
+  listAll(folderRef)
+    .then((result) => {
+      const promises = result.items.map((itemRef) => getDownloadURL(itemRef));
+      Promise.all(promises)
+        .then((urls) => {
+          setImages(urls);
+        })
+        .catch((error) => {
+          console.error("Error getting download URLs:", error);
+        });
+    })
+    .catch((error) => {
+      console.error("Error listing items in folder:", error);
+    });
 };
 
 return (
@@ -75,8 +104,18 @@ return (
           value={userId} 
           onChange={(event) => setUserId(event.target.value)}
         />
+        {/* Button to upload image */}
         <input type='file' onChange={(event) => { setImageUpload(event.target.files[0]) }}></input>
         <button onClick={uploadImage}>Upload Image</button>
+        {/* Button to display images */}
+        <button onClick={displayImages}>Display Images</button>
+      </div>
+
+      {/* Display images */}
+      <div className="images-container">
+        {images.map((imageUrl, index) => (
+          <img key={index} src={imageUrl} alt={`Image ${index}`} />
+        ))}
       </div>
     </header>
   </div>
