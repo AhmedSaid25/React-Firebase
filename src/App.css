@@ -1,0 +1,50 @@
+.App {
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+  
+  .App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+  
+  .upload-container {
+    margin-bottom: 20px;
+  }
+  
+  .upload-container input[type="text"],
+  .upload-container input[type="file"],
+  .upload-container button {
+    margin: 5px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    font-size: 14px;
+  }
+  
+  .upload-container button {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .images-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .images-container img {
+    max-width: 200px;
+    max-height: 200px;
+    margin: 10px;
+    border-radius: 5px;
+  }
+  

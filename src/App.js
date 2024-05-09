@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes, listAll, getDownloadURL, list } from 'firebase/storage';
+import './App.css';
 
 const App = () => {
   const [imageUpload, setImageUpload] = useState(null);
